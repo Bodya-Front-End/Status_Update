@@ -5,30 +5,61 @@
   </mat-toolbar-row>
 </mat-toolbar>
 <div class="content">
-  <div>
-    <mat-card>
-      <mat-card-title>Send request</mat-card-title>
-      <mat-card-actions>
-        <div>
-          <button *ngIf="!loading" mat-fab color="primary" (click)="sendRequest()">
-            <mat-icon >send</mat-icon>
-          </button>
+  <div class="cards">
+    <div>
+      <mat-card>
+        <mat-card-title>Send request</mat-card-title>
+        <mat-card-actions>
+          <div>
+            <button *ngIf="!loading" mat-fab color="primary" (click)="sendRequest()">
+              <mat-icon >send</mat-icon>
+            </button>
 
-          <mat-spinner diameter="50" *ngIf="loading"></mat-spinner>
+            <mat-spinner diameter="50" *ngIf="loading"></mat-spinner>
 
-        </div>
-      </mat-card-actions>
-    </mat-card>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+
+    <div>
+      <mat-card *ngIf="gotAnAnswer">
+        <mat-card-title>Status:</mat-card-title>
+        <mat-card-content>
+          <div class="specific-font" >
+            <p [ngClass]="{
+            'success': answer?.result === responseStatus.SUCCESS,
+            'pending': answer?.result === responseStatus.PENDING
+            }">{{answer?.result}}</p>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 
-  <div>
-    <mat-card *ngIf="gotAnAnswer">
-      <mat-card-title>Status:</mat-card-title>
-      <mat-card-content>
-        <div class="success">
-          <p class="specific-font">{{answer?.status}}</p>
-        </div>
-      </mat-card-content>
-    </mat-card>
+  <div class="logs" *ngIf="dataSourceTable.data.length">
+    <table mat-table [dataSource]="dataSourceTable" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="date">
+        <th mat-header-cell *matHeaderCellDef> Date </th>
+        <td mat-cell *matCellDef="let log"> {{log.date | date:'medium'}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="url">
+        <th mat-header-cell *matHeaderCellDef> URL </th>
+        <td mat-cell *matCellDef="let log"> {{log.url}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="result">
+        <th mat-header-cell *matHeaderCellDef> Result </th>
+        <td mat-cell *matCellDef="let log" [ngClass]="{
+            'success': log?.result === responseStatus.SUCCESS,
+            'pending': log?.result === responseStatus.PENDING
+            }"> {{log.result}} </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
   </div>
 </div>

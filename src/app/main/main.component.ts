@@ -1,7 +1,9 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Response, SendRequestService} from "../services/send-request.service";
-import {finalize, takeUntil, tap} from "rxjs/operators";
+import {LogData, ResponseStatus, SendRequestService} from "../services/send-request.service";
+import {finalize, takeUntil} from "rxjs/operators";
 import {Subject} from "rxjs";
+import {MatTableDataSource} from "@angular/material/table";
+
 
 @Component({
   selector: 'app-main',
@@ -10,10 +12,14 @@ import {Subject} from "rxjs";
 })
 export class MainComponent implements OnInit, OnDestroy {
   public loading = false;
-  // public gotAnAnswer = false;
   public gotAnAnswer = true;
-  public answer: Response;
+  public responseStatus = ResponseStatus;
+  public answer: LogData;
   private destroy$ = new Subject();
+  public displayedColumns: string[] = ['date', 'url', 'result'];
+  private logs  = [];
+  public dataSourceTable = new MatTableDataSource();
+
 
   constructor(private sendRequestService: SendRequestService) {
   }
@@ -38,6 +44,8 @@ export class MainComponent implements OnInit, OnDestroy {
       )
       .subscribe(res => {
         this.answer = res;
+        this.logs.push(res)
+        this.dataSourceTable.data = this.logs
       })
   }
 }
