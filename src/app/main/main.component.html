@@ -4,23 +4,31 @@
     <span>Status Update [Test-Task]</span>
   </mat-toolbar-row>
 </mat-toolbar>
-<mat-grid-list cols="2" rowHeight="1:1">
-  <mat-grid-tile>
+<div class="content">
+  <div>
     <mat-card>
       <mat-card-title>Send request</mat-card-title>
-
       <mat-card-actions>
-        <div class="example-button-container">
-          <button mat-fab color="primary">
-            <mat-icon>send</mat-icon>
+        <div>
+          <button *ngIf="!loading" mat-fab color="primary" (click)="sendRequest()">
+            <mat-icon >send</mat-icon>
           </button>
+
+          <mat-spinner diameter="50" *ngIf="loading"></mat-spinner>
+
         </div>
       </mat-card-actions>
-
     </mat-card>
-  </mat-grid-tile>
+  </div>
 
-  <mat-grid-tile>
-
-  </mat-grid-tile>
-</mat-grid-list>
+  <div>
+    <mat-card *ngIf="gotAnAnswer">
+      <mat-card-title>Status:</mat-card-title>
+      <mat-card-content>
+        <div class="success">
+          <p class="specific-font">{{answer?.status}}</p>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
